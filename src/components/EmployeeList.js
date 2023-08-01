@@ -1,7 +1,7 @@
 import Employee from "./Employee";
 import { EmployeeContext } from "../context/EmployeeContext";
 import { useContext, useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Alert, Button, Modal } from "react-bootstrap";
 import AddForm from "./AddForm";
 
 function EmployeeList() {
@@ -12,8 +12,19 @@ function EmployeeList() {
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
+  const [showAlert, setShowAlert] = useState(false);
+
+  const handleShowAlert = () => {
+    setShowAlert(true);
+    setTimeout(() => {}, 2000);
+  };
+
   useEffect(() => {
-    handleClose()
+    handleClose();
+
+    return () => {
+      handleShowAlert();
+    };
   }, [employees]);
 
   return (
@@ -38,6 +49,15 @@ function EmployeeList() {
         </div>
       </div>
 
+      <Alert
+        variant="danger"
+        show={showAlert}
+        onClose={() => setShowAlert(false)}
+        dismissible
+      >
+        Employee list updated successfully
+      </Alert>
+
       <table className="table table-striped table-hover">
         <thead>
           <tr>
@@ -49,11 +69,13 @@ function EmployeeList() {
           </tr>
         </thead>
         <tbody>
-          {employees.map((emp) => (
-            <tr key={emp.id}>
-              <Employee employee={emp} />
-            </tr>
-          ))}
+          {employees
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
+            .map((emp) => (
+              <tr key={emp.id}>
+                <Employee employee={emp} />
+              </tr>
+            ))}
         </tbody>
       </table>
       <Modal show={show} onHide={handleClose}>

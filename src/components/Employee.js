@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { EmployeeContext } from "../context/EmployeeContext";
@@ -12,6 +12,10 @@ function Employee({ employee }) {
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
+  useEffect(() => {
+    handleClose();
+  }, [employee]);
+
   return (
     <>
       <td>{employee.name}</td>
@@ -19,7 +23,11 @@ function Employee({ employee }) {
       <td>{employee.address}</td>
       <td>{employee.phone}</td>
       <td>
-        <button className="btn text-warning btn-act" data-toggle="modal" onClick={handleShow}>
+        <button
+          className="btn text-warning btn-act"
+          data-toggle="modal"
+          onClick={handleShow}
+        >
           <i className="material-icons" data-toggle="tooltip" title="Edit">
             &#xE254;
           </i>
