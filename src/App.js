@@ -1,9 +1,13 @@
-import EmployeeList from './components/EmployeeList';
+import EmployeeList from "./components/EmployeeList";
 
 function App() {
   return (
-    <div className="App">
-      <EmployeeList />
+    <div className="container-xl">
+      <div className="table-responsive">
+        <div className="table-wrapper">
+          <EmployeeList />
+        </div>
+      </div>
     </div>
   );
 }
