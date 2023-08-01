@@ -1,7 +1,11 @@
 import React from "react";
+import { useContext } from "react";
+import { Button } from "react-bootstrap";
+import { EmployeeContext } from "../context/EmployeeContext";
 
-function Employee({employee}) {
-    // console.log(employee);
+function Employee({ employee }) {
+  const { deleteEmployee } = useContext(EmployeeContext);
+
   return (
     <>
       <td>{employee.name}</td>
@@ -9,16 +13,20 @@ function Employee({employee}) {
       <td>{employee.address}</td>
       <td>{employee.phone}</td>
       <td>
-        <a href="#editEmployeeModal" className="edit" data-toggle="modal">
+        <button className="btn text-warning btn-act" data-toggle="modal">
           <i className="material-icons" data-toggle="tooltip" title="Edit">
             &#xE254;
           </i>
-        </a>
-        <a href="#deleteEmployeeModal" className="delete" data-toggle="modal">
+        </button>
+        <button
+          className="btn text-danger btn-act"
+          data-toggle="modal"
+          onClick={() => deleteEmployee(employee.id)}
+        >
           <i className="material-icons" data-toggle="tooltip" title="Delete">
             &#xE872;
           </i>
-        </a>
+        </button>
       </td>
     </>
   );
