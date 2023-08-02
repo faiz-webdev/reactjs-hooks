@@ -3,20 +3,30 @@ import { EmployeeContext } from "../context/EmployeeContext";
 import { useContext, useEffect, useState } from "react";
 import { Alert, Button, Modal } from "react-bootstrap";
 import AddForm from "./AddForm";
+import Pagination from "./Pagination";
 
 function EmployeeList() {
-  const { employees } = useContext(EmployeeContext);
+  const { sortedEmployees } = useContext(EmployeeContext);
 
   const [show, setShow] = useState(false);
+
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
-  const [showAlert, setShowAlert] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [employeesPerPage] = useState(2);
 
   const handleShowAlert = () => {
     setShowAlert(true);
-    setTimeout(() => {}, 2000);
+    setTimeout(() => {
+      //   return () => {
+      //     handleShowAlert();
+      //   };
+      //   showAlert(false);
+      setShowAlert(false);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -25,7 +35,15 @@ function EmployeeList() {
     return () => {
       handleShowAlert();
     };
-  }, [employees]);
+  }, [sortedEmployees]);
+
+  const indexOfLastEmployee = currentPage * employeesPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
+  const currentEmployees = sortedEmployees.slice(
+    indexOfFirstEmployee,
+    indexOfLastEmployee
+  );
+  const totalPagesNum = Math.ceil(sortedEmployees.length / employeesPerPage);
 
   return (
     <>
@@ -69,15 +87,16 @@ function EmployeeList() {
           </tr>
         </thead>
         <tbody>
-          {employees
-            .sort((a, b) => (a.name < b.name ? -1 : 1))
-            .map((emp) => (
-              <tr key={emp.id}>
-                <Employee employee={emp} />
-              </tr>
-            ))}
+          {currentEmployees.map((emp) => (
+            <tr key={emp.id}>
+              <Employee employee={emp} />
+            </tr>
+          ))}
         </tbody>
       </table>
+
+      <Pagination pages={totalPagesNum} setCurrentPage={setCurrentPage} />
+
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Employee</Modal.Title>
